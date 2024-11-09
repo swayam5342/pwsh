@@ -99,8 +99,12 @@ function admin {
         Start-Process wt -Verb runAs
     }
 }
+# Path for system scripts 
+$path_script = 'D:\code\pwsh\scripts'
 
-#       Set UNIX-like aliases for the admin command, so sudo <command> will run the command with elevated rights.
+
+
+#Set UNIX-like aliases for the admin command, so sudo <command> will run the command with elevated rights.
 #Set-Alias -Name su -Value admin
 #
 
@@ -156,13 +160,13 @@ function pgrep($name) {
 }
 
 function head {
-    param($Path, $n = 10)
-    Get-Content $Path -Head $n
+  param($Path, $n = 10)
+  Get-Content $Path -Head $n
 }
 
 function tail {
-    param($Path, $n = 10, [switch]$f = $false)
-    Get-Content $Path -Tail $n -Wait:$f
+  param($Path, $n = 10, [switch]$f = $false)
+  Get-Content $Path -Tail $n -Wait:$f
 }
 
 # Quick File Creation
@@ -171,14 +175,16 @@ function nf { param($name) New-Item -ItemType "file" -Path . -Name $name }
 # Directory Management
 function mkcd { param($dir) mkdir $dir -Force; Set-Location $dir }
 
+###  MY FINCTIONs
+Function show_file{
+    Invoke-Expression 'fzf --preview="bat --color=always {}"'
+}
 
-### MY FUNCTIONS 
 Function pic {
     Set-Location "D:\code\nasa_pic"
     $command = 'nasa -t'
     Invoke-Expression $command
 }
-
 
 Function quote {
     param (
@@ -205,8 +211,14 @@ Function quote {
 ### Quality of Life Aliases
 set-Alias nano micro
 set-Alias dns bandwhich
-Set-ALIAS youtube '.\youtube.ps1'
+Set-ALIAS youtube $path_script'\youtube.ps1'
 Set-Alias speed speedtest
+Set-ALIAS ftc croc
+Set-Alias desktop dtop
+Set-Alias downloads ddow
+Set-Alias documents docs
+Set-Alias use Show-Help
+
 
 # Navigation Shortcuts
 function docs { Set-Location -Path $HOME\Documents }
@@ -263,7 +275,8 @@ function pst { Get-Clipboard }
 # Enhanced PowerShell Experience
 
 $env:PYTHONIOENCODING="utf-8"
-iex "$(thefuck --alias)"
+
+#iex "$(thefuck --alias)"
 
 Set-PSReadlineOption -Color @{
     "Command"          = [ConsoleColor]::Green
@@ -295,7 +308,7 @@ Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock $scriptblock
 
 # Get theme from profile.ps1 or use a default theme
 function Get-Theme {
-    oh-my-posh init pwsh --config 'D:\code\pwsh\swayam_them.json' | Invoke-Expression
+oh-my-posh init pwsh --config $path_script'\swayam_them.json' | Invoke-Expression
 }
 
 ## Final Line to set prompt
